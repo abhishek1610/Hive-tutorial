@@ -33,3 +33,27 @@ c. ORC - Optimized Row columnar
 CREATE TABLE sample ( column1 STRING, column2 STRING, column3 INT, column4 INT ) STORED AS ORCFILE;
 
 The ORC File (Optimized Row Columnar) format provides a more efficient way to store relational data than the RC File, reducing the data storage format of the original. The ORC file format performs better than other Hive files formats when Hive is reading, writing, and processing data
+
+Hive Avro support-
+
+We can create Hive Avro table using below syntax.
+
+create table NEW_TABLE
+    row format serde 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+    stored as inputformat 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+    outputformat 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+    tblproperties ('avro.schema.literal'='{
+        "name": "my_record",
+        "type": "record",
+        "fields": [
+           {"name":"boolean1", "type":"boolean"},
+           {"name":"int1", "type":"int"},
+           {"name":"long1", "type":"long"},
+           {"name":"float1", "type":"float"},
+           {"name":"double1", "type":"double"},
+           {"name":"string1", "type":"string"},
+           {"name": "nullable_int", "type": ["int", "null"]]}');
+           
+  The table properties can either be mentioned like above or a avro json file location can be specified which will be used.
+  
+  tblproperties ('avro.schema.url'='hdfs//your-name-node:port/path/to/schema.json');
